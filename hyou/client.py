@@ -46,7 +46,7 @@ class Collection(util.LazyOrderedDictionary):
     self.drive = drive
 
   @classmethod
-  def login(cls, json_path=None, json_text=None):
+  def login(cls, json_path=None, json_text=None, service_account_sub=None):
     if json_text is None:
       with open(json_path, 'r') as f:
         json_text = f.read()
@@ -57,7 +57,8 @@ class Collection(util.LazyOrderedDictionary):
       credentials = oauth2client.client.SignedJwtAssertionCredentials(
           service_account_name=json_data['client_email'],
           private_key=json_data['private_key'],
-          scope=GOOGLE_SPREADSHEET_SCOPES)
+          scope=GOOGLE_SPREADSHEET_SCOPES,
+          sub=service_account_sub)
     else:
       raise ValueError('unrecognized credential format')
     # Don't use auth_token= argument. It does not refresh tokens.
